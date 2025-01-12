@@ -52,7 +52,7 @@ export default function Topbar() {
                            {nav.label}
                         </Link>
                         {isNavDropdownOpen === nav.id && nav.subCategories && (
-                           <div className="absolute top-[12.5rem] mt-2 bg-white w-[10%] min-w-[200px] rounded-md rounded-b-[1rem] shadow-lg border border-gray-200">
+                           <div className="absolute top-[12.5rem] mt-2 bg-white w-[10%] min-w-[200px] rounded-md rounded-b-[1rem] shadow-lg border border-gray-200 z-50">
                               <ul className="flex flex-col py-2">
                                  {nav.subCategories.map((subCategory) => (
                                     <Link href={`/category/${subCategory.id}`} key={subCategory.id}>

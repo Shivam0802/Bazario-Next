@@ -3,13 +3,23 @@
 import React from "react";
 import Link from "next/link";
 import Select from "react-select";
+import { toast } from 'react-hot-toast';
+import { useRouter } from "next/navigation";
+import { toastError, toastSuccess } from '@/utils/toast';
+import { createUser } from '@/services/user.services';
 
 export default function Home() {
+   const router = useRouter();
 
+   const [isTermsAccepted, setIsTermsAccepted] = React.useState(false);
    const [formData, setFormData] = React.useState({
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       phone: '',
+      address: '',
+      dob: '',
+      gender: '',
       password: '',
       confirmPassword: '',
    });
@@ -18,10 +28,6 @@ export default function Home() {
       setFormData({ ...formData, [e.target.name]: e.target.value });
    };
 
-   const handleSubmit = (e: any) => {
-      e.preventDefault();
-      console.log(formData);
-   };
 
    const genderOptions = [
       { value: 'male', label: 'Male' },
@@ -29,27 +35,109 @@ export default function Home() {
       { value: 'other', label: 'Other' },
    ];
 
-   const handleValidation = () => {
-      const { name, email, phone, password, confirmPassword } = formData;
+   const handleSubmit = async (e: any) => {
+      e.preventDefault();
+      try {
+         if (formData.firstName === '') {
+            toast.error('Name is required.');
+            return;
+         } else if (!/^[a-zA-Z ]+$/.test(formData.firstName)) {
+            toast.error('Please enter a valid name without numbers or special characters.');
+            return;
+         }
 
-      if (!name || !email || !phone || !password || !confirmPassword) {
-         return false;
-      } else if (password !== confirmPassword) {
-         return false;
-      } else if (phone.length !== 10 || isNaN(Number(phone)) || !/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phone)) {
-         return false;
-      } else if (!email.includes('@') || !email.includes('.') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-         return false;
-      } else if (password.length < 6 || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
-         return false;
-      } else if (confirmPassword.length < 6 || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(confirmPassword) || password !== confirmPassword) {
-         return false;
-      } else if (name.length < 3 || !/^[a-zA-Z]+$/.test(name) || name.length > 20) {
-         return false;
+         if (formData.lastName === '') {
+            toast.error('Name is required.');
+            return;
+         } else if (!/^[a-zA-Z ]+$/.test(formData.lastName)) {
+            toast.error('Please enter a valid name without numbers or special characters.');
+            return;
+         }
+
+         if (formData.email === '') {
+            toast.error('Email is required.');
+            return;
+         } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+            toast.error('Please enter a valid email.');
+            return;
+         }
+
+         if (formData.phone === '') {
+            toast.error('Phone number is required.');
+            return;
+         } else if (!/^[0-9]+$/.test(formData.phone)) {
+            toast.error('Please enter a valid phone number.');
+            return;
+         }
+
+         if (formData.address === '') {
+            toast.error('Address is required.');
+            return;
+         } else if (!/^[a-zA-Z0-9 ]+$/.test(formData.address)) {
+            toast.error('Please enter a valid address.');
+            return;
+         }
+
+         if (formData.dob === '') {
+            toast.error('Date of birth is required.');
+            return;
+         }
+
+         if (formData.password === '') {
+            toast.error('Password is required.');
+            return;
+         } else if (formData.password.length < 8) {
+            toast.error('Password must be at least 8 characters.');
+            return;
+         } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(formData.password)) {
+            toast.error('Password must contain at least one uppercase letter, one lowercase letter, and one number.');
+            return;
+         } 
+         
+         if (formData.confirmPassword === '') {
+            toast.error('Confirm password is required.');
+            return;
+         } else if (formData.confirmPassword.length < 8) {
+            toast.error('Confirm password must be at least 8 characters.');
+            return;
+         } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(formData.confirmPassword)) {
+            toast.error('Confirm password must contain at least one uppercase letter, one lowercase letter, and one number.');
+            return;
+         } 
+         
+         if (formData.password !== formData.confirmPassword) {
+            toast.error('Passwords do not match.');
+            return;
+         }
+
+         if (!isTermsAccepted) {
+            toast.error('You must accept the terms and conditions.');
+            return;
+         }
+
+         const fillData = { 
+            firstName: formData.firstName,
+            lastName: formData.lastName, 
+            email: formData.email,
+            dob: formData.dob,
+            gender: formData.gender,
+            address: formData.address,
+            phone: formData.phone, 
+            password: formData.password 
+         };
+
+         const result = await createUser(fillData);
+
+         if (result?.data?.message) {
+            toastSuccess(result?.data?.message);
+            router.push('/signIn');
+         }
+      } catch (error) {
+         toastError(error);
       }
-
-      return true;
    };
+
+   
    return (
       <>
          <div className={`min-h-screen bg-gray-100 text-gray-900 flex justify-center items-center`}
@@ -63,7 +151,7 @@ export default function Home() {
             <div className="absolute right-56 max-w-screen-xl h-fit m-0 sm:m-10 lg:my-28 bg-white shadow sm:rounded-lg flex justify-center">
                <div className={`bg-gray-200 flex justify-center bg-slate-800`}>
                   <div className="bg-white p-6 shadow-lg w-full dark:bg-slate-100">
-                     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                     <form className="flex flex-col gap-4" onSubmit={(e) => handleSubmit}>
                         <div className="text-2xl text-teal-800 font-semibold capitalize text-center mb-4">
                            <h3>Welcome to Bazario!</h3>
                            <p className="text-[1.12rem] font-normal text-gray-400">
@@ -77,8 +165,8 @@ export default function Home() {
                               </div>
                               <div className="relative mb-4">
                                  <div className="w-full flex gap-3">
-                                    <input className="capitalize shadow-2xl p-3 ex w-full outline-none focus:border-solid focus:border-[1px] border-[#035ec5] placeholder:text-darkgray" type="text" placeholder="First Name" id="First-Name" name="First-Name" required />
-                                    <input className="p-3 capitalize shadow-2xl  glass w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="text" placeholder="Last Name" id="Last-Name" name="Last-Name" required />
+                                    <input className="capitalize shadow-2xl px-3 py-2 ex w-full outline-none focus:border-solid focus:border-[1px] border-[#035ec5] placeholder:text-darkgray" type="text" placeholder="First Name" id="First-Name" name="firstName" autoComplete="false" required onChange={handleChange}/>
+                                    <input className="px-3 py-2 capitalize shadow-2xl  glass w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="text" placeholder="Last Name" id="Last-Name" name="Last-Name" autoComplete="false" required onChange={handleChange}/>
                                  </div>
                               </div>
                            </div>
@@ -87,7 +175,7 @@ export default function Home() {
                                  <label className='text-[1.12rem]'>Email</label>
                               </div>
                               <div className="flex gap-3">
-                                 <input className="p-3 glass shadow-2xl w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="email" placeholder="Email" id="address" name="address" required />
+                                 <input className="px-3 py-2 glass shadow-2xl w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="email" placeholder="Email" id="txtEmail" name="email" autoComplete="false" required onChange={handleChange}/>
                               </div>
                            </div>
                            <div className="mt-4">
@@ -98,7 +186,7 @@ export default function Home() {
                                     </div>
                                     <div className="relative">
                                        <div className="w-full flex gap-3">
-                                          <input className="capitalize shadow-2xl p-3 ex w-full outline-none focus:border-solid focus:border-[1px] border-[#035ec5] placeholder:text-darkgray" type="tel" placeholder="Contact Number" id="First-Name" name="First-Name" required />
+                                          <input className="capitalize shadow-2xl px-3 py-2 ex w-full outline-none focus:border-solid focus:border-[1px] border-[#035ec5] placeholder:text-darkgray" type="tel" placeholder="Contact Number" id="txtContactNo" name="contactnum" maxLength={10} required onChange={handleChange} />
                                        </div>
                                     </div>
                                  </div>
@@ -108,7 +196,7 @@ export default function Home() {
                                     </div>
                                     <div className="relative">
                                        <div className="w-full flex gap-3">
-                                          <input className="p-3 shadow-2xl glass w-full text-black outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="date" required />
+                                          <input className="px-3 py-[0.45rem] shadow-2xl glass w-full text-black outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="date" required onChange={handleChange}/>
                                        </div>
                                     </div>
                                  </div>
@@ -123,7 +211,7 @@ export default function Home() {
                                              placeholder="Select Gender"
                                              className="w-full"
                                              styles={{
-                                                control: (styles: any) => ({ ...styles, backgroundColor: "white", border: "none", boxShadow: "none", minHeight: "3rem" }),
+                                                control: (styles: any) => ({ ...styles, backgroundColor: "white", border: "none", boxShadow: "none", minHeight: "2.5rem" }),
                                                 option: (styles: any, { isFocused, isSelected }: { isFocused: boolean, isSelected: boolean }) => ({
                                                    ...styles, backgroundColor: isSelected ? "#AB4459" : isFocused ? "#F1F1F1" : "white",
                                                    color: isSelected ? "white" : "inherit",
@@ -134,6 +222,7 @@ export default function Home() {
                                                 placeholder: (styles: any) => ({ ...styles, color: "darkgray", fontSize: "1rem" }),
                                                 singleValue: (styles: any) => ({ ...styles, color: "darkslategrey", fontSize: "1rem", }),
                                              }}
+                                             onChange={handleChange}
                                           />
                                        </div>
                                     </div>
@@ -145,7 +234,7 @@ export default function Home() {
                                  <label className='text-[1.12rem]'>Address</label>
                               </div>
                               <div className="flex gap-3">
-                                 <input className="p-3 glass shadow-2xl w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="text" placeholder="Address" id="address" name="address" required />
+                                 <input className="px-3 py-2 glass shadow-2xl w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5] uppercase" type="text" placeholder="Address" id="address" name="address" autoComplete="false" required onChange={handleChange}/>
                               </div>
                            </div>
                            <div className="mt-4">
@@ -153,23 +242,16 @@ export default function Home() {
                                  <label className='text-[1.12rem]'>Password</label>
                               </div>
                               <div className="flex gap-3">
-                                 <input className="p-3 glass shadow-2xl  w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="password" placeholder="Password" id="password" name="password" required />
-                                 <input className="p-3 glass shadow-2xl  w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="password" placeholder="Confirm password" required />
+                                 <input className="px-3 py-2 glass shadow-2xl w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="password" placeholder="Password" id="password" name="password" required onChange={handleChange}/>
+                                 <input className="px-3 py-2 glass shadow-2xl  w-full placeholder:text-darkgray outline-none focus:border-solid focus:border-[1px] border-[#035ec5]" type="password" placeholder="Confirm password" required onChange={handleChange}/>
                               </div>
                            </div>
-                           <div className="sm:flex sm:justify-between flex-col inline-block my-4">
+                           <div className="sm:flex sm:justify-between flex-col inline-block my-8">
                               <div className="flex">
-                                 <input className="text-blue-800" type="checkbox" checked />
+                                 <input className="text-blue-800" type="checkbox" checked={isTermsAccepted} onChange={(e) => setIsTermsAccepted(e.target.checked)}/>
                                  <span className="pl-1">
                                     I agree to the
-                                    <Link href="#" className="text-blue-800 hover:underline"> Terms & Conditions</Link>
-                                 </span>
-                              </div>
-                              <div className="flex">
-                                 <input className="text-blue-800" type="checkbox" checked />
-                                 <span className="pl-1">
-                                    I agree to the
-                                    <Link href="#" className="text-blue-800 hover:underline"> Privacy Policy</Link>
+                                    <Link href="#" className="text-blue-800 hover:underline"> Terms & Conditions</Link> and <Link href="#" className="text-blue-800 hover:underline">Privacy Policy</Link>
                                  </span>
                               </div>
                            </div>

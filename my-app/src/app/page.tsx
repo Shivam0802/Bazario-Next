@@ -25,19 +25,6 @@ export default function Home() {
   const items = ["Fashion", "Bags", "Footwear", "Electronics", "Groceries", "Furniture", "Wellness", "Jewellery", "Stationary",];
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [startIndex, setStartIndex] = useState(0);
-
-  const handleNext = () => {
-    if (startIndex + 7 < items.length) {
-      setStartIndex(startIndex + 2);
-    }
-  };
-
-  const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 2);
-    }
-  };
 
   const scrollToTopButton = document.getElementById('scrollToTopButton');
   window.addEventListener('scroll', () => {
@@ -55,6 +42,85 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      <section className="flex flex-col items-center justify-between m-6 p-10">
+
+        <div
+          className="w-[80%] h-auto cursor-pointer group overflow-hidden p-8 duration-1000 hover:duration-1000 relative bg-neutral-100 rounded-xl"
+        >
+          <div
+            className="w-full group-hover:-top-3 bg-transparent -top-12 -left-12 absolute shadow-yellow-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
+          ></div>
+          <div
+            className="group-hover:top-60 bg-transparent top-44 left-14 absolute shadow-red-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
+          ></div>
+          <div
+            className="group-hover:-left-12 bg-transparent top-24 left-56 absolute shadow-sky-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
+          ></div>
+          <div
+            className="group-hover:-top-44 bg-transparent top-12 left-12 absolute shadow-red-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-12 h-12"
+          ></div>
+          <div
+            className="group-hover:left-44 bg-transparent top-12 left-12 absolute shadow-green-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-44 h-44"
+          ></div>
+          <div
+            className="group-hover:-left-2 bg-transparent -top-24 -left-12 absolute shadow-sky-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-64 h-64"
+          ></div>
+          <div
+            className="group-hover:top-44 bg-transparent top-24 left-12 absolute shadow-sky-500 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-4 h-4"
+          ></div>
+
+
+          <div
+            className="w-full group-hover:-bottom-3 bg-transparent -bottom-12 -right-12 absolute shadow-yellow-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
+          ></div>
+          <div
+            className="group-hover:bottom-60 bg-transparent bottom-44 right-14 absolute shadow-red-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
+          ></div>
+          <div
+            className="group-hover:-right-12 bg-transparent bottom-24 right-56 absolute shadow-sky-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
+          ></div>
+          <div
+            className="group-hover:-bottom-44 bg-transparent bottom-12 right-12 absolute shadow-red-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-12 h-12"
+          ></div>
+          <div
+            className="group-hover:right-44 bg-transparent bottom-12 right-12 absolute shadow-green-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-44 h-44"
+          ></div>
+          <div
+            className="group-hover:-right-2 bg-transparent -bottom-24 -right-12 absolute shadow-sky-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-64 h-64"
+          ></div>
+          <div
+            className="group-hover:bottom-44 bg-transparent bottom-24 right-12 absolute shadow-sky-500 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-4 h-4"
+          ></div>
+          <div
+            className="w-full h-full shadow-xl shadow-neutral-900 p-3 bg-neutral-300 opacity-50 rounded-xl flex-col gap-2 flex justify-center text-center"
+          >
+            <div className="text-gray-900 font-medium text-[2rem] uppercase flex gap-10 items-center justify-center p-4">
+              <span>Fashion</span>
+              <span>|</span>
+              <span>Electronics</span>
+              <span>|</span>
+              <span>HomeDecore</span>
+            </div>
+            <p className="text-white text-[6rem] font-normal">
+              <span className="text-yellow-900">
+                SALE
+              </span>
+            </p>
+
+            <p className="text-white text-[2.6rem] font-light bg-green-900 p-2 w-1/2 mx-auto flex flex-col items-center justify-center">
+              <span className="text-white uppercase leading-0">Upto 50% Discount</span>
+              <span className="text-white text-[1rem]">
+                Offer valid till 31st March
+              </span>
+            </p>
+
+            <Link href="/products" className="w-1/5 bg-[#3C3D37] text-white rounded-full px-4 py-2 mt-4 mx-auto mb-10 hover:bg-[#AE445A] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">
+              Shop Now
+            </Link>
+          </div>
+        </div>
+
+      </section>
       <section className="flex my-4">
         <div className="mt-6 mx-28">
           <h1 className="text-2xl font-normal uppercase text-gray-800">
