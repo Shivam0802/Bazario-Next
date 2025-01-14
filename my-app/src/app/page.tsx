@@ -8,17 +8,8 @@ import ProductCard from "@/component/productCard";
 import Adscard from "@/component/adsCard";
 import { ArrowBigUpDash, Shirt, Truck, BadgePercent, BadgeIndianRupee, Mail, Redo2 } from 'lucide-react';
 import { ads } from "@/assets/data";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  title: string;
-  description: string;
-  category: string;
-  rating: { rate: number; };
-}
+import { getProducts, Product } from "@/services/product.services";
+import Chatbot from "@/component/chatbot";
 
 
 export default function Home() {
@@ -39,10 +30,16 @@ export default function Home() {
     }
   });
 
+  useEffect(() => {
+    getProducts().then((data) => {
+      setProducts(data);
+    });
+  }, []);
+
   return (
     <>
       <Navbar />
-      <section className="flex flex-col items-center justify-between m-6 p-10">
+      <section className="flex flex-col items-center justify-between m-6 p-10 hidden sm:flex">
 
         <div
           className="w-[80%] h-auto cursor-pointer group overflow-hidden p-8 duration-1000 hover:duration-1000 relative bg-neutral-100 rounded-xl"
@@ -71,7 +68,7 @@ export default function Home() {
 
 
           <div
-            className="w-full group-hover:-bottom-3 bg-transparent -bottom-12 -right-12 absolute shadow-yellow-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
+            className=" group-hover:-bottom-3 bg-transparent -bottom-12 -right-12 absolute shadow-yellow-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
           ></div>
           <div
             className="group-hover:bottom-60 bg-transparent bottom-44 right-14 absolute shadow-red-800 shadow-inner rounded-xl transition-all ease-in-out group-hover:duration-1000 duration-1000 w-24 h-24"
@@ -114,14 +111,14 @@ export default function Home() {
               </span>
             </p>
 
-            <Link href="/products" className="w-1/5 bg-[#3C3D37] text-white rounded-full px-4 py-2 mt-4 mx-auto mb-10 hover:bg-[#AE445A] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">
+            <Link href="/products" className="w-1/5 bg-[#3C3D37] text-white rounded-md px-4 py-3 mt-4 mx-auto mb-10 hover:bg-[#AE445A] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">
               Shop Now
             </Link>
           </div>
         </div>
 
       </section>
-      <section className="flex my-4">
+      <section className="flex my-4 hidden sm:block">
         <div className="mt-6 mx-28">
           <h1 className="text-2xl font-normal uppercase text-gray-800">
             Featured Categories
@@ -178,21 +175,25 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <section className="flex flex-col mt-8">
-        <div className="flex justify-between items-center mx-28">
-          <div className="flex flex-col w-[35%]">
-            <h1 className="text-2xl font-normal uppercase text-gray-800 mt-6 leading-3">
+        <div className="flex flex-col sm:flex-row justify-between items-center mx-4 sm:mx-28">
+          <div className="flex flex-col w-full sm:w-[35%]">
+            <h1 className="text-2xl font-normal uppercase text-gray-800 mt-6 leading-3 ml-4 sm:ml-0">
               Popular Products
             </h1>
-            <p className="text-[1.12rem] font-light text-gray-500 leading-8">
+            <p className="text-[1.12rem] font-light text-gray-500 leading-8 ml-4 sm:ml-0">
               Don't miss out on these amazing products
             </p>
           </div>
-          <div className="flex justify-between items-center gap-10 mt-6 w-[60%]">
-            <div className="overflow-hidden w-[100%]">
-              <ul id="slider" className="flex jutify-between gap-8 transition-transform duration-500">
+          <div className="hidden sm:flex justify-between items-center gap-10 mt-6 w-full sm:w-[60%]">
+            <div className="overflow-hidden w-full">
+              <ul id="slider" className="flex justify-between gap-8 transition-transform duration-500">
                 {items.map((item, index) => (
-                  <li key={index} className="text-[1.2rem] text-gray-800 flex-grow cursor-pointer whitespace-nowrap hover:text-[#AE445A] hover:underline hover:underline-offset-1 transition duration-300">
+                  <li
+                    key={index}
+                    className="text-[1.2rem] text-gray-800 flex-grow cursor-pointer whitespace-nowrap hover:text-[#AE445A] hover:underline hover:underline-offset-1 transition duration-300"
+                  >
                     {item}
                   </li>
                 ))}
@@ -200,78 +201,88 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="my-8 mx-28 grid grid-cols-5 gap-8">
-          {products.map((product) => (
+        <div className="my-8 mx-4 sm:mx-28 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-8">
+          {products.slice(0, 5).map((product) => (
             <ProductCard key={product.id} product={product} />
-          )).slice(0, 5)}
+          ))}
         </div>
       </section>
+
       <section className="flex flex-col mt-8">
-        <div className="flex justify-between items-center mx-28">
-          <div className="flex flex-col w-[35%]">
-            <h1 className="text-2xl font-normal uppercase text-gray-800 mt-4 leading-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mx-4 sm:mx-28">
+          <div className="flex flex-col w-full sm:w-[35%]">
+            <h1 className="text-xl sm:text-2xl font-normal uppercase text-gray-800 mt-4 leading-5 sm:leading-3">
               New Arrivals
             </h1>
-            <p className="text-[1.12rem] font-light text-gray-500 leading-8">
+            <p className="text-base sm:text-[1.12rem] font-light text-gray-500 leading-6 sm:leading-8">
               Check out the latest products in store now
             </p>
           </div>
-          <Link href="/product" className="flex items-cemter gap-2 bg-gray-100 py-2 px-4 rounded-tl-[1rem] rounded-br-[1rem] rounded-md shadow-zinc-900 shadow-lg text-[1.12rem] text-[#3C3D37] hover:text-[#AE445A] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300">
+          <Link
+            href="/product"
+            className="flex items-center gap-2 bg-gray-100 py-2 px-4 rounded-tl-lg rounded-br-lg rounded-md shadow-lg text-base sm:text-[1.12rem] text-[#3C3D37] hover:text-[#AE445A] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300 mt-4 sm:mt-0"
+          >
             View all products
             <Redo2 size="20" className="inline-block ml-2" />
           </Link>
         </div>
-        <div className="my-8 mx-28 grid grid-cols-5 gap-8">
-          {products.map((product) => (
+        <div className="my-8 mx-4 sm:mx-28 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-8">
+          {products.slice(0, 5).map((product) => (
             <ProductCard key={product.id} product={product} />
-          )).slice(0, 5)}
+          ))}
         </div>
       </section>
+
       <section className="flex flex-col mt-8">
-        <div className="flex justify-between items-center mx-28">
-          <div className="flex flex-col w-[35%]">
-            <h1 className="text-2xl font-normal uppercase text-gray-800 mt-6 leading-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mx-4 sm:mx-28">
+          <div className="flex flex-col w-full sm:w-[35%]">
+            <h1 className="text-xl sm:text-2xl font-normal uppercase text-gray-800 mt-4 sm:mt-6 leading-5 sm:leading-3">
               Featured Products
             </h1>
-            <p className="text-[1.12rem] font-light text-gray-500 leading-8">
+            <p className="text-base sm:text-[1.12rem] font-light text-gray-500 leading-6 sm:leading-8">
               Do not miss the current offers until the end of March.
             </p>
           </div>
         </div>
-        <div className="my-8 mx-28 flex gap-8">
-          {ads.map((product) => {
-            return (
-              <Adscard key={product.id} ads={product} />
-            );
-          })}
+        <div className="my-8 mx-4 sm:mx-28 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-8">
+          {ads.map((product) => (
+            <Adscard key={product.id} ads={product} />
+          ))}
         </div>
       </section>
-      <section className="flex justify-between bg-[#F5F5F5] m-6 py-6 rounded-[2rem]">
-        <div className="flex flex-col w-[50%] mx-28 mt-8">
-          <h1 className="text-2xl font-normal uppercase text-gray-800 mt-4 ml-2">
+
+      <section className="flex flex-col md:flex-row justify-between bg-[#F5F5F5] m-4 md:m-6 py-6 rounded-[2rem]">
+        <div className="flex flex-col w-full md:w-[50%] mx-4 md:mx-28 mt-8">
+          <h1 className="text-xl md:text-2xl font-normal uppercase text-gray-800 mt-4 ml-2">
             $20 discount for your first order
           </h1>
-          <h1 className="text-[2.6rem] font-medium uppercase text-[#697565] mt-4">
+          <h1 className="text-2xl md:text-[2.6rem] font-medium uppercase text-[#697565] mt-4">
             Join our newsletter and get...
           </h1>
-          <p className="text-[1.12rem] font-light text-gray-700 leading-5 pr-80">
-            Join our email subscription now to get updates on
-            promotions and coupons.
+          <p className="text-base md:text-[1.12rem] font-light text-gray-700 leading-6 md:leading-5 pr-4 md:pr-80">
+            Join our email subscription now to get updates on promotions and coupons.
           </p>
 
-          <form action="#" className="flex mt-20">
-            <div className="flex items-center gap-2 bg-white p-2 rounded-l-lg w-[70%]">
+          <form action="#" className="flex flex-col md:flex-row mt-8 md:mt-20 gap-4 md:gap-0">
+            <div className="flex items-center gap-2 bg-white p-2 rounded-lg md:rounded-l-lg w-[93%]">
               <Mail size="28" className="text-gray-800" />
-              <input type="email" placeholder="Enter your email address" className="w-full p-2 focus:outline-none text-[1.25rem]" />
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                className="w-full p-2 focus:outline-none text-base md:text-[1.25rem]"
+              />
             </div>
-            <button className="bg-[#3C3D37] text-white rounded-r-lg px-4">Subscribe</button>
+            <button className="bg-[#3C3D37] text-white rounded-lg md:rounded-r-lg px-4 py-2 md:py-0 w-[93%] md:w-auto">
+              Subscribe
+            </button>
           </form>
         </div>
-        <div className="flex justify-center items-center w-[50%] mr-28">
-          <img src="/newsletter.webp" alt="discount" className="w-full h-[24rem] bg-blend-normal" />
+        <div className="flex justify-center items-center w-full md:w-[50%] mt-8 md:mt-0 mx-4 md:mr-28">
+          <img src="/newsletter.webp" alt="discount" className="w-full h-auto md:h-[24rem] bg-blend-normal" />
         </div>
       </section>
-      <section className="flex mt-8 mx-28 gap-8">
+
+      <section className="sm:flex mt-8 mx-28 gap-8 hidden">
         <div className="flex justify-center items-center w-[30%] my-6 gap-2">
           <Shirt size="28" className="text-gray-800" />
           <h1 className="text-[1rem] font-normal text-gray-800 leading-3">
@@ -301,9 +312,12 @@ export default function Home() {
         </div>
       </section>
       {/* <hr className="mx-28 border-t border-gray-300" /> */}
-      <button id="scrollToTopButton" className="bg-[#3C3D37] rounded-full w-12 h-12 flex justify-center items-center fixed bottom-10 right-10 cursor-pointer hover:shadow-2xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+      <button id="scrollToTopButton" className="bg-[#3C3D37] rounded-full w-12 h-12 flex justify-center items-center fixed bottom-28 right-12 cursor-pointer hover:shadow-2xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
         <ArrowBigUpDash size="28" className="text-white" />
       </button>
+      <div className="fixed bottom-10 right-10">
+        <Chatbot />
+      </div>
       <Footer />
     </>
   );

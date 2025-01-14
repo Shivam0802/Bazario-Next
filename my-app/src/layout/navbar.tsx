@@ -26,7 +26,7 @@ export default function Navbar() {
                   <img src="/logo.svg" alt="Bazario" className="cursor-pointer" />
                </Link>
 
-               <div className="flex items-center gap-2 space-x-2">
+               <div className="flex items-center gap-2 space-x-2 hidden sm:flex">
                   <Link
                      href="/"
                      className="cursor-pointer bg-[#F5F5F5] relative inline-flex items-center justify-center gap-2 rounded-md text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-white hover:text-[#317866] h-9 rounded-md px-3"
@@ -66,9 +66,9 @@ export default function Navbar() {
 
                <div className="flex items-center gap-4 space-x-4">
                   <div className="flex items-center gap-2 space-x-3">
-                     <button className="cursor-pointer hover:text-[#244da8] transition ease-in-out delay-150 hover:translate-y-1 hover:scale-110 duration-300">
+                     <Link href="/cart" className="cursor-pointer hover:text-[#244da8] transition ease-in-out delay-150 hover:translate-y-1 hover:scale-110 duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-shopping-bag"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
-                     </button>
+                     </Link>
 
                      <div className="relative flex justify-end items-center gap-2 space-x-2">
                         <button onClick={handleNotificationButtonClick} className="cursor-pointer hover:text-[#244da8] transition ease-in-out delay-150 hover:translate-y-1 hover:scale-110 duration-300">
@@ -104,7 +104,6 @@ export default function Navbar() {
                      )
                   }
                </div>
-
             </div>
             <Topbar />
          </nav>

@@ -4,7 +4,7 @@ import { PhoneForwarded, BadgeIndianRupee, Truck, TicketXIcon, TableOfContents, 
 
 export const Footer = () => {
    return (
-      <footer className="bg-[#EBEAE1F0] m-6 rounded-[2rem]">
+      <footer className="bg-[#EBEAE1F0] m-6 rounded-[2rem] hidden sm:block">
          <div className='flex items-center justify-between gap-4 py-4 pl-16 pr-24'>
             <div className='flex items-center gap-4'>
                <img src="/logo.svg" alt="logo" className='w-[20rem]' />

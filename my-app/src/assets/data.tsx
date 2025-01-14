@@ -473,3 +473,36 @@ export const ShippingInformation = [
         ]
     }
 ];
+
+export const reviews = [
+    {
+      name: 'Farhana Zeenath',
+      daysAgo: '26 days ago',
+      location: 'Devarakonda',
+      rating: 5,
+      review: 'I am absolutely in love with this dress and the design is stunning',
+      helpful: 1,
+      notHelpful: 0,
+      images: ['/review.webp', '/review.webp', '/review.webp', '/review.webp', '/review.webp'],
+    },
+    {
+      name: 'Sneha',
+      daysAgo: '26 days ago',
+      location: 'New Delhi',
+      rating: 5,
+      review: 'This suit is very beautiful, everyone complimented. Best for party wear and material is also good.',
+      helpful: 1,
+      notHelpful: 0,
+      images: [],
+    },
+    {
+      name: 'Dhruv Bansal',
+      daysAgo: '30 days ago',
+      location: 'Mira Bhayandar',
+      rating: 5,
+      review: 'Colour very nice, quality good, new pattern, u can use festival also',
+      helpful: 1,
+      notHelpful: 0,
+      images: ['/path/to/image6.jpg'],
+    },
+  ];

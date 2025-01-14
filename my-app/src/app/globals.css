@@ -21,6 +21,16 @@
   background: #b2b2b2;
 }
 
+.custom-scrollbar {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none; 
+}
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -37,4 +47,8 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: "Kanit", sans-serif;
+}
+
+.utility-animation {
+  @apply transition ease-in-out delay-150 duration-300 hover:-translate-y-1 hover:scale-110;
 }
